@@ -1,0 +1,15 @@
+# Settings used by both environments. Credentials never go here: see README "Authentication".
+api:
+  rest_base_url: https://external-api.kalshi.com/trade-api/v2
+  ws_url: wss://external-api-ws.kalshi.com/trade-api/ws/v2
+  timeout_seconds: 30
+  max_retries: 8
+  # Budgets are in Kalshi tokens; see tokens_per_second in each environment file.
+  # Costs per endpoint live in kalshi_quant/shared/api/rate_limit.py.
+logging:
+  level: INFO
+  directory: logs
+storage:
+  data_directory: data
+  # Pipelines stop writing high-volume rows when free disk falls below this.
+  min_free_disk_gb: 5.0

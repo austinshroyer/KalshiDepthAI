@@ -1,0 +1,42 @@
+environment: fifteen_minute
+database_url: sqlite:///data/fifteen_minute.sqlite
+strategy_directory: kalshi_quant/fifteen_minute/strategies
+tokens_per_second: 100   # half of Basic's 200 read tokens/s; the other half is the other pipeline's
+collection:
+  orderbook_seconds: 1.0           # live quotes and depth for every market, one request
+  active_poll_seconds: 5           # status, volume, results (/markets is cached ~10s)
+  orderbook_levels: 10
+  discovery_seconds: 300           # markets are listed up to two days ahead
+  settlement_poll_seconds: 3
+  series_refresh_seconds: 600
+  trades_poll_seconds: 2
+  collect_trades: true
+  observation_heartbeat_seconds: 30
+  interval_minutes: 1              # rollup grid for market_interval_probs
+  use_websocket: true
+  ws_orderbook_interval_ms: 1000
+  flush_seconds: 1
+  flush_rows: 5000
+maintenance:
+  archive_after_days: 7
+  archive_directory: data/archive/fifteen_minute
+  growth_log_seconds: 3600
+  rollup_seconds: 60
+backtest:
+  starting_capital: 1000
+  latency_ms: 250
+  max_quote_age_seconds: 10
+execution:
+  max_book_participation: 0.5
+  max_candle_volume_participation: 0.10
+  slippage_ticks: 0
+  candle_slippage_ticks: 1
+  fee_rounding_dollars: 0.0001   # centicent; use 0.01 for an FCM-cleared account
+  contract_step: 1
+paper:
+  poll_seconds: 1
+  market_seconds: 5
+  discovery_seconds: 120
+  max_tracked_markets: 200
+  max_book_markets: 200
+  tokens_per_second: 50

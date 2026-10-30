@@ -1,0 +1,13 @@
+# Optional settings merged over the strategy's class defaults.
+parameters:
+  entry_probability: 0.40
+risk:
+  stop_loss: 0.15
+  take_profit: 0.30
+universe:
+  categories: []       # for example [Economics, Politics]
+  exclude_series: []
+optimization:
+  entry_probability: {min: 0.30, max: 0.50, step: 0.05}
+  stop_loss: {min: 0.05, max: 0.30, step: 0.05}
+  take_profit: {min: 0.10, max: 0.60, step: 0.10}

@@ -1,0 +1,19 @@
+# Runtime
+httpx>=0.28
+websockets>=15
+cryptography>=44
+SQLAlchemy>=2.0
+alembic>=1.14
+pandas>=2.2
+numpy>=2.0
+scipy>=1.14
+duckdb>=1.1          # Parquet (zstd) archive of old rows; analytics over archives
+typer>=0.15
+rich>=13
+PyYAML>=6
+pydantic>=2.9
+structlog>=24
+certifi
+# Tests
+pytest>=8
+pytest-asyncio>=0.24

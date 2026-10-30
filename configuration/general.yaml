@@ -1,0 +1,46 @@
+environment: general
+database_url: sqlite:///data/general.sqlite
+strategy_directory: kalshi_quant/general_markets/strategies
+tokens_per_second: 100   # half of Basic's 200 read tokens/s; the other half is the other pipeline's
+collection:
+  include_multivariate: false      # combos are created on demand; see docs/API_NOTES.md
+  full_sweep_seconds: 1800         # every open market (~170k, ~370 MB per sweep)
+  hot_sweep_seconds: 30            # live quotes from order books for the busiest markets
+  hot_market_count: 3000
+  metadata_sweep_seconds: 300      # new markets and metadata changes
+  settlement_sweep_seconds: 300
+  series_refresh_seconds: 600
+  event_sweep_seconds: 900
+  trades_poll_seconds: 3
+  collect_trades: true
+  orderbook_market_count: 300      # of the hot set, also store depth snapshots
+  orderbook_levels: 10
+  observation_heartbeat_seconds: 900   # rewrite an unchanged quote this often
+  archive_sweep_seconds: 5         # delay between pages of the resolved-market walk
+  use_websocket: true              # used only if credentials are present
+  ws_orderbook_interval_ms: 1000
+  flush_seconds: 2
+  flush_rows: 5000
+maintenance:
+  archive_after_days: 30
+  archive_directory: data/archive/general
+  growth_log_seconds: 3600
+  rollup_seconds: 300
+backtest:
+  starting_capital: 10000
+  latency_ms: 1000
+  max_quote_age_seconds: 900
+execution:
+  max_book_participation: 0.5
+  max_candle_volume_participation: 0.10
+  slippage_ticks: 0
+  candle_slippage_ticks: 1
+  fee_rounding_dollars: 0.0001   # centicent; use 0.01 for an FCM-cleared account
+  contract_step: 1
+paper:
+  poll_seconds: 10
+  market_seconds: 15
+  discovery_seconds: 600
+  max_tracked_markets: 500
+  max_book_markets: 500
+  tokens_per_second: 50
