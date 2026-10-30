@@ -83,7 +83,8 @@ def test_optimize_runs_from_cli(workspace):
 
 @pytest.mark.parametrize("script", ["collect_all.py", "collect_general_markets.py", "collect_15m_markets.py", "paper_trade.py",
                                     "paper_trade_general.py", "paper_trade_15m.py", "backtest.py", "backtest_general.py",
-                                    "backtest_15m.py", "optimize_general.py", "optimize_15m.py"])
+                                    "backtest_15m.py", "optimize_general.py", "optimize_15m.py",
+                                    "evolve_general.py", "evolve_15m.py"])
 def test_entry_scripts_start(script):
     completed = subprocess.run([sys.executable, script, "--help"], cwd=PROJECT_ROOT, capture_output=True, text=True, timeout=60)
     assert completed.returncode == 0, completed.stderr

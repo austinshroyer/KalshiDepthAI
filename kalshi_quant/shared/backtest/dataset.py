@@ -97,6 +97,19 @@ class Dataset:
                        {positions[i]: v for i, v in self.levels.items() if i in positions}, dict(self.warnings),
                        self.categories, self.gaps_ms)
 
+    def restrict(self, tickers: "set[str] | frozenset[str]") -> "Dataset":
+        """The same data limited to these markets. Indices stay valid against ``self.tickers``."""
+        allowed = np.array([t in tickers for t in self.tickers], dtype=bool)
+        mask = allowed[self.ticker_index] if len(self) else np.empty(0, dtype=bool)
+        indices = np.nonzero(mask)[0]
+        positions = {int(old): new for new, old in enumerate(indices)} if self.levels else {}
+        return Dataset(self.spec, {t: i for t, i in self.infos.items() if t in tickers},
+                       {t: s for t, s in self.settlements.items() if t in tickers}, self.tickers,
+                       self.ticker_index[mask], self.ts_ms[mask], self.status[mask], self.is_candle[mask],
+                       {k: v[mask] for k, v in self.values.items()},
+                       {positions[i]: v for i, v in self.levels.items() if i in positions}, dict(self.warnings),
+                       self.categories, self.gaps_ms)
+
     def save(self, path: Path) -> None:
         with path.open("wb") as fh:
             pickle.dump(self, fh, protocol=pickle.HIGHEST_PROTOCOL)

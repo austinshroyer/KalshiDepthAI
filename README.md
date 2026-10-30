@@ -21,12 +21,13 @@ markets and one for 15-minute markets, each with its own database, strategies an
 | Paper trading, 15-minute (fills, stops, take-profit, settlement) | Live |
 | Paper trading, general | Live: discovered 170,758 markets, tracked 500, stopped cleanly. No simulated trade occurred in that 7-minute run |
 | Backtests, exact replay, optimizer with walk-forward | Live data |
+| Evolutionary learning | Tests plus reduced runs on real data; the full 50-cycle process has not been run |
 | Trade backfill (`--trades`) | Mock only |
 | **WebSocket feed** | **Mock only: no API key was available** |
 | Request signing | Unit-tested with real keys generated locally; never accepted by Kalshi |
 | PostgreSQL | Not run. Schema is SQLAlchemy Core and upserts are dialect-aware |
 
-The test suite has 192 tests. Live runs were short (under an hour, one evening), so multi-day
+The test suite has 234 tests. Live runs were short (under an hour, one evening), so multi-day
 stability and daytime volume are **not** yet observed.
 
 ## Installation
@@ -91,6 +92,7 @@ Every command names its environment: `general` or `15m`.
 | Paper trade | `main.py paper general\|15m --strategy X [--strategy Y] [--capital] [--background] [--resume]` (or `paper_trade.py`, `paper_trade_general.py`, `paper_trade_15m.py`) |
 | Stop a session | `main.py paper stop <env> <session_id>` |
 | Inspect paper | `main.py paper sessions <env>`, `paper positions`, `paper capital`, `paper performance`, `paper trades <env>` |
+| Evolve strategies | `main.py evolve <env> [--profile smoke\|quick] [--category X] [--workers N] [--resume id]` (or `evolve_general.py`, `evolve_15m.py`) |
 | Data | `main.py database stats\|growth\|validate\|backup\|archive\|query` |
 
 Run `python main.py <command> --help` for all options.
@@ -330,6 +332,11 @@ The verdict lists specific reasons for doubt. **No flags does not mean a strateg
 Test data is only clean the first time. If you re-run after seeing test results, it becomes training
 data, and you should count those trials against yourself.
 
+## Evolutionary learning
+
+Finds strategies per Kalshi category and across categories, breeds hybrids, and tests whether anything
+transfers. See [docs/EVOLUTION.md](docs/EVOLUTION.md).
+
 ## Paper trading
 
 ```bash
@@ -382,4 +389,5 @@ python scripts/make_migration.py "describe the change"
 - The limiter's endpoint costs were measured once and may change.
 - Real-data backtests so far are small samples. They prove the machinery, not any strategy.
 
-More detail: [docs/API_NOTES.md](docs/API_NOTES.md), [docs/DATABASE.md](docs/DATABASE.md).
+More detail: [docs/API_NOTES.md](docs/API_NOTES.md), [docs/DATABASE.md](docs/DATABASE.md),
+[docs/EVOLUTION.md](docs/EVOLUTION.md).

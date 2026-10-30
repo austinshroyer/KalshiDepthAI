@@ -171,6 +171,30 @@ def optimize(
     reports.optimization_report(report)
 
 
+@app.command()
+def evolve(
+    env: EnvArg, profile: Annotated[Optional[str], typer.Option(help="smoke or quick. Omit for the full 50-cycle process")] = None,
+    category: Annotated[Optional[list[str]], typer.Option(help="Limit category populations")] = None,
+    start: Annotated[Optional[str], typer.Option()] = None, end: Annotated[Optional[str], typer.Option()] = None,
+    source: Annotated[str, typer.Option(help="auto, observations or candles")] = "auto",
+    workers: int = 1, seed: int = 0, resume: Annotated[Optional[str], typer.Option(help="Continue this run id")] = None,
+) -> None:
+    """Evolve category, cross-category and hybrid populations, then validate out of sample."""
+    from kalshi_quant.shared.backtest.dataset import load_dataset
+    from kalshi_quant.shared.evolution.engine import EvolutionEngine
+    from kalshi_quant.shared.evolution.report import render_markdown
+    from kalshi_quant.shared.evolution.settings import EvolutionSettings
+    config, db = _context(env)
+    configure_logging(f"evolve_{config.env.value}", console=False)
+    dataset = load_dataset(db, _spec(config, start, end, None, None, source))
+    if not len(dataset):
+        raise typer.BadParameter("no data available; run `backfill` or collect first")
+    engine = EvolutionEngine(db, config, dataset, EvolutionSettings(config.env, profile), resume, workers, seed, only_categories=category, progress=typer.echo)
+    typer.echo(f"run {engine.run_id}: {len(engine.populations)} category populations; insufficient: {sorted(engine.insufficient)}")
+    typer.echo(render_markdown(engine.run()))
+    typer.echo(f"saved to {engine.root}")
+
+
 # Paper trading
 @paper_app.command("start")
 def paper_start(

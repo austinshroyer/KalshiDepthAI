@@ -34,6 +34,7 @@ FROM observations_decimal WHERE ticker = 'KXBTC15M-26OCT301830-30' ORDER BY ts_m
 | Operations | `checkpoints`, `collection_gaps`, `heartbeats`, `db_growth`, `archives`, `classification_audit`, `raw_responses` | Resume state, coverage, health, growth, Parquet index, disagreements, zlib JSON payloads |
 | Paper | `paper_sessions`, `paper_orders`, `paper_trades`, `paper_equity`, `paper_state` | Simulated activity |
 | Research | `backtest_runs`, `backtest_trades`, `optimization_runs`, `optimization_trials` | Saved, reproducible results |
+| Evolution | `evolution_runs`, `evolution_strategies` | Runs, their reports, and every saved strategy by population and stage |
 
 ## Implied probability
 

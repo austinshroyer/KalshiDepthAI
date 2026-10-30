@@ -74,7 +74,7 @@ def run_backtest(strategy: Strategy, dataset: Dataset, settings: BacktestSetting
                             int(settings.max_quote_age_seconds * 1000))
     for info in dataset.infos.values():
         runner.register(info)
-    selected = np.array([runner._is_selected(t) for t in dataset.tickers], dtype=bool)
+    selected = np.array([t in dataset.infos and runner._is_selected(t) for t in dataset.tickers], dtype=bool)
     settlement_queue = sorted(dataset.settlements.values(), key=lambda s: s.ts_ms)
     next_settlement = 0
     samples_ts: list[int] = []

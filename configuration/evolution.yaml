@@ -1,0 +1,54 @@
+# Evolutionary learning. `defaults` is the full process: 50 cycles of 50 epochs, 10 saved per
+# cycle (500 saved), hybridization, then a final 50-epoch cycle yielding 10 strategies.
+defaults:
+  cycles: 50
+  epochs: 50
+  population_size: 60
+  saved_per_cycle: 10
+  final_epochs: 50
+  final_saved: 10
+  elite_fraction: 0.1
+  tournament_size: 3
+  crossover_rate: 0.6
+  mutation_rate: 0.8
+hybrid:
+  per_mode: 20
+  epochs: 50
+  population_size: 60
+validation:
+  train_fraction: 0.6
+  validation_fraction: 0.2
+  forward_windows: 3
+  walk_forward_folds: 3
+  walk_forward_epochs: 10
+  walk_forward_population: 30
+  leave_one_out_epochs: 10
+  leave_one_out_population: 30
+  fdr_alpha: 0.05
+eligibility:              # below these a category is reported as insufficient and skipped
+  min_markets: 100
+  min_rows: 2000
+  min_days: 3
+fitness:                  # each population type is judged on its own objective
+  category: {min_trades: 20, drawdown_weight: 5.0}
+  cross_category: {min_trades: 40, drawdown_weight: 5.0, generalization_weight: 0.6, min_trades_per_category: 5, min_categories: 2}
+  hybrid: {min_trades: 30, drawdown_weight: 5.0, generalization_weight: 0.3, min_trades_per_category: 5, min_categories: 2}
+credibility:              # a finalist must pass all of these; lists are never padded
+  min_test_trades: 20
+  cross_min_generalization: 0.2
+cross_category:
+  max_markets_per_category: 2000   # balances categories; the smallest eligible count also caps this
+gene_space:
+  general: {lookbacks: [300, 900, 3600, 14400, 86400], holding_seconds: [3600, 14400, 86400, 604800]}
+  fifteen_minute: {lookbacks: [30, 60, 120, 300], holding_seconds: [60, 180, 300, 600]}
+# Lower the work for one environment, category or population without changing others, e.g.
+# overrides: {general: {Sports: {cycles: 10, population_size: 40}}, fifteen_minute: {cross_category: {cycles: 20}}}
+overrides: {}
+profiles:                 # --profile smoke proves the pipeline in minutes; results mean little
+  smoke:
+    defaults: {cycles: 2, epochs: 3, population_size: 12, saved_per_cycle: 3, final_epochs: 3, final_saved: 3}
+    hybrid: {per_mode: 4, epochs: 2, population_size: 12}
+    validation: {walk_forward_folds: 2, walk_forward_epochs: 2, walk_forward_population: 8, leave_one_out_epochs: 2, leave_one_out_population: 8}
+  quick:
+    defaults: {cycles: 5, epochs: 10, population_size: 30, saved_per_cycle: 10, final_epochs: 10, final_saved: 10}
+    hybrid: {per_mode: 10, epochs: 10, population_size: 30}

@@ -373,6 +373,28 @@ def build_metadata(env: "Env | str") -> MetaData:
           Column("objective", Float),
           Column("daily_returns", Text),
           sqlite_with_rowid=False)
+    Table("evolution_runs", md,
+          Column("run_id", String, primary_key=True),
+          Column("created_ms", Ms, nullable=False),
+          Column("status", String, nullable=False),
+          Column("dataset_id", String, nullable=False),
+          Column("config", Text, nullable=False),
+          Column("report", Text))
+
+    Table("evolution_strategies", md,  # every saved strategy, one row per (population, cycle, rank)
+          Column("run_id", ForeignKey("evolution_runs.run_id"), primary_key=True),
+          Column("population", String, primary_key=True),
+          Column("stage", String, primary_key=True),  # cycle_001 ... final
+          Column("rank", Integer, primary_key=True),
+          Column("strategy_id", String, nullable=False, index=True),
+          Column("population_type", String, nullable=False),
+          Column("genome", Text, nullable=False),
+          Column("origin", String, nullable=False),
+          Column("parents", Text, nullable=False),
+          Column("components", Text, nullable=False),
+          Column("fitness", Float),
+          Column("metrics", Text, nullable=False),
+          sqlite_with_rowid=False)
     return md
 
 
